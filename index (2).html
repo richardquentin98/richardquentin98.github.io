@@ -1,0 +1,503 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Quentin Richard · Cybersécurité</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=DM+Sans:wght@300;400;500&family=DM+Mono:wght@400&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --cream: #F5F0E8; --beige: #EDE5D8; --beige-mid: #D4C4A8; --tan: #B8A48A;
+    --brown-light: #8B7355; --brown: #6B5740; --brown-dark: #4A3728;
+    --ink: #2C1F14; --accent: #A0714F; --accent-light: #C4956A;
+  }
+  html { scroll-behavior: smooth; }
+  body { background: var(--cream); color: var(--ink); font-family: 'DM Sans', sans-serif; font-weight: 300; line-height: 1.6; }
+
+  nav { position: fixed; top: 0; left: 0; right: 0; z-index: 100; display: flex; justify-content: space-between; align-items: center; padding: 1.25rem 4rem; background: var(--cream); border-bottom: 1px solid var(--beige-mid); }
+  .nav-logo { font-family: 'DM Mono', monospace; font-size: 0.85rem; color: var(--brown-dark); text-decoration: none; letter-spacing: 0.05em; }
+  .nav-links { display: flex; gap: 2rem; list-style: none; }
+  .nav-links a { font-size: 0.72rem; letter-spacing: 0.14em; text-transform: uppercase; color: var(--brown-light); text-decoration: none; transition: color 0.2s; }
+  .nav-links a:hover { color: var(--brown-dark); }
+
+  #hero { min-height: 100vh; padding-top: 5rem; display: grid; grid-template-columns: 55% 45%; }
+  .hero-left { display: flex; flex-direction: column; justify-content: center; padding: 6rem 4rem; border-right: 1px solid var(--beige-mid); }
+  .hero-photo-wrap { width: 88px; height: 88px; border-radius: 50%; overflow: hidden; border: 2px solid var(--beige-mid); margin-bottom: 1.75rem; flex-shrink: 0; }
+  .hero-photo-wrap img { width: 100%; height: 100%; object-fit: cover; }
+  .hero-tag { font-family: 'DM Mono', monospace; font-size: 0.72rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--accent); margin-bottom: 1rem; }
+  h1 { font-family: 'Playfair Display', serif; font-size: clamp(3rem, 4.5vw, 4.2rem); font-weight: 400; line-height: 1.08; color: var(--brown-dark); margin-bottom: 0.5rem; }
+  h1 em { font-style: italic; color: var(--accent); }
+  .hero-desc { font-size: 0.95rem; color: var(--brown-light); max-width: 40ch; line-height: 1.8; margin: 1.75rem 0 2.5rem; }
+  .hero-cta { display: flex; gap: 1rem; align-items: center; }
+  .btn-primary { display: inline-block; padding: 0.75rem 1.75rem; background: var(--brown-dark); color: var(--cream); text-decoration: none; font-size: 0.75rem; letter-spacing: 0.12em; text-transform: uppercase; transition: background 0.2s; }
+  .btn-primary:hover { background: var(--brown); }
+  .btn-link { font-size: 0.75rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--brown-light); text-decoration: none; border-bottom: 1px solid var(--beige-mid); padding-bottom: 2px; transition: color 0.2s, border-color 0.2s; }
+  .btn-link:hover { color: var(--brown-dark); border-color: var(--brown-dark); }
+  .hero-right { background: var(--beige); display: flex; flex-direction: column; justify-content: flex-end; padding: 4rem; position: relative; overflow: hidden; }
+  .hero-circle { position: absolute; top: -60px; right: -60px; width: 320px; height: 320px; border-radius: 50%; border: 1px solid var(--beige-mid); opacity: 0.5; }
+  .hero-circle2 { position: absolute; top: 30px; right: 30px; width: 200px; height: 200px; border-radius: 50%; border: 1px solid var(--tan); opacity: 0.35; }
+  .status-badge { display: inline-flex; align-items: center; gap: 0.5rem; font-size: 0.7rem; font-family: 'DM Mono', monospace; letter-spacing: 0.12em; text-transform: uppercase; color: var(--brown); background: var(--cream); border: 1px solid var(--beige-mid); padding: 0.4rem 0.9rem; margin-bottom: 1.5rem; width: fit-content; }
+  .status-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--accent); flex-shrink: 0; animation: pulse 2s infinite; }
+  @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.3; } }
+  .info-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1px; background: var(--beige-mid); border: 1px solid var(--beige-mid); }
+  .info-cell { background: var(--beige); padding: 1.1rem 1.25rem; }
+  .info-label { font-size: 0.65rem; font-family: 'DM Mono', monospace; letter-spacing: 0.15em; text-transform: uppercase; color: var(--tan); margin-bottom: 0.2rem; }
+  .info-value { font-size: 0.85rem; color: var(--brown-dark); }
+
+  .section-label { font-size: 0.66rem; font-family: 'DM Mono', monospace; letter-spacing: 0.22em; text-transform: uppercase; color: var(--accent); margin-bottom: 2.5rem; display: flex; align-items: center; gap: 1rem; }
+  .section-label::after { content: ''; flex: 1; height: 1px; background: var(--beige-mid); }
+  h2 { font-family: 'Playfair Display', serif; font-size: clamp(1.9rem, 2.8vw, 2.6rem); font-weight: 400; color: var(--brown-dark); }
+
+  #about { display: grid; grid-template-columns: 1fr 1fr; border-top: 1px solid var(--beige-mid); border-bottom: 1px solid var(--beige-mid); }
+  .about-left { padding: 6rem 4rem; border-right: 1px solid var(--beige-mid); }
+  .about-left h2 { margin-bottom: 1.5rem; }
+  .about-text { font-size: 0.92rem; color: var(--brown-light); line-height: 1.85; max-width: 44ch; margin-bottom: 1.25rem; }
+  .about-right { padding: 6rem 4rem; background: var(--beige); display: flex; flex-direction: column; justify-content: center; }
+  .stat-row { padding: 1.75rem 0; border-bottom: 1px solid var(--beige-mid); display: flex; align-items: baseline; gap: 1.5rem; }
+  .stat-row:first-child { border-top: 1px solid var(--beige-mid); }
+  .stat-number { font-family: 'Playfair Display', serif; font-size: 2.8rem; color: var(--brown-dark); line-height: 1; min-width: 6rem; }
+  .stat-label { font-size: 0.82rem; color: var(--brown-light); line-height: 1.5; }
+
+  #skills { padding: 6rem 4rem; background: var(--cream); border-bottom: 1px solid var(--beige-mid); }
+  .skills-layout { display: grid; grid-template-columns: 280px 1fr; gap: 4rem; align-items: start; margin-top: 3rem; }
+  .skills-intro { font-size: 0.88rem; color: var(--brown-light); line-height: 1.8; }
+  .skills-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 1px; background: var(--beige-mid); border: 1px solid var(--beige-mid); }
+  .skill-group { background: var(--cream); padding: 1.5rem; }
+  .skill-group-title { font-size: 0.65rem; font-family: 'DM Mono', monospace; letter-spacing: 0.15em; text-transform: uppercase; color: var(--accent); margin-bottom: 0.9rem; }
+  .skill-list { display: flex; flex-direction: column; gap: 0.35rem; }
+  .skill-item { font-size: 0.82rem; font-family: 'DM Mono', monospace; color: var(--brown-dark); }
+
+  #transversal { padding: 6rem 4rem; background: var(--beige); border-bottom: 1px solid var(--beige-mid); }
+  .transversal-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 1px; background: var(--beige-mid); border: 1px solid var(--beige-mid); margin-top: 3rem; }
+  .transversal-card { background: var(--cream); padding: 2rem; }
+  .transversal-card-title { font-size: 0.65rem; font-family: 'DM Mono', monospace; letter-spacing: 0.15em; text-transform: uppercase; color: var(--accent); margin-bottom: 0.9rem; }
+  .transversal-card p { font-size: 0.84rem; color: var(--brown-light); line-height: 1.75; }
+
+  #valeurs { padding: 6rem 4rem; background: var(--cream); border-bottom: 1px solid var(--beige-mid); }
+  .valeurs-layout { display: grid; grid-template-columns: 1fr 1fr; gap: 1px; background: var(--beige-mid); border: 1px solid var(--beige-mid); margin-top: 3rem; }
+  .valeur-col { background: var(--cream); padding: 2.5rem; }
+  .valeur-col.alt { background: var(--beige); }
+  .valeur-col-title { font-size: 0.65rem; font-family: 'DM Mono', monospace; letter-spacing: 0.15em; text-transform: uppercase; color: var(--accent); margin-bottom: 1.5rem; }
+  .valeur-item { margin-bottom: 1.5rem; }
+  .valeur-name { font-size: 0.92rem; font-weight: 500; color: var(--brown-dark); margin-bottom: 0.25rem; }
+  .valeur-desc { font-size: 0.82rem; color: var(--brown-light); line-height: 1.65; }
+
+  #projection { padding: 6rem 4rem; background: var(--brown-dark); border-top: 1px solid var(--beige-mid); }
+  #projection .section-label { color: var(--tan); }
+  #projection .section-label::after { background: var(--brown-light); }
+  #projection h2 { color: var(--cream); }
+  .projection-layout { display: grid; grid-template-columns: 1fr 1fr; gap: 4rem; margin-top: 3rem; }
+  .projection-text { font-size: 0.92rem; color: var(--beige-mid); line-height: 1.85; margin-bottom: 1.25rem; }
+  .projection-steps { border: 1px solid var(--brown-light); }
+  .projection-step { padding: 1.25rem 1.5rem; border-bottom: 1px solid var(--brown-light); display: flex; gap: 1.25rem; }
+  .projection-step:last-child { border-bottom: none; }
+  .step-year { font-family: 'DM Mono', monospace; font-size: 0.7rem; letter-spacing: 0.1em; color: var(--tan); min-width: 3.5rem; padding-top: 0.1rem; flex-shrink: 0; }
+  .step-text { font-size: 0.84rem; color: var(--beige-mid); line-height: 1.65; }
+
+  #engagements { padding: 6rem 4rem; background: var(--cream); border-top: 1px solid var(--beige-mid); border-bottom: 1px solid var(--beige-mid); }
+  .engagements-layout { display: grid; grid-template-columns: 1fr 1fr; gap: 1px; background: var(--beige-mid); border: 1px solid var(--beige-mid); margin-top: 3rem; }
+  .engagement-card { background: var(--cream); padding: 2.5rem; }
+  .engagement-card:nth-child(even) { background: var(--beige); }
+  .engagement-year { font-family: 'DM Mono', monospace; font-size: 0.65rem; letter-spacing: 0.15em; text-transform: uppercase; color: var(--tan); margin-bottom: 0.4rem; }
+  .engagement-title { font-size: 1rem; font-weight: 500; color: var(--brown-dark); margin-bottom: 0.2rem; }
+  .engagement-sub { font-size: 0.8rem; color: var(--accent); margin-bottom: 0.9rem; }
+  .engagement-text { font-size: 0.84rem; color: var(--brown-light); line-height: 1.75; }
+
+  #projects { padding: 6rem 4rem; background: var(--beige); border-bottom: 1px solid var(--beige-mid); }
+  .projects-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1px; background: var(--beige-mid); border: 1px solid var(--beige-mid); margin-top: 3rem; }
+  .project-card { background: var(--cream); padding: 2rem; display: flex; flex-direction: column; gap: 0.75rem; }
+  .project-card.dark { background: var(--brown-dark); grid-column: span 2; }
+  .project-num { font-family: 'Playfair Display', serif; font-size: 2.2rem; color: var(--beige-mid); line-height: 1; }
+  .project-card.dark .project-num { color: var(--brown-light); }
+  .project-title { font-size: 1.05rem; font-weight: 500; color: var(--brown-dark); margin-top: 0.25rem; }
+  .project-card.dark .project-title { font-size: 1.2rem; color: var(--cream); }
+  .project-desc { font-size: 0.84rem; color: var(--brown-light); line-height: 1.7; }
+  .project-card.dark .project-desc { color: var(--beige-mid); }
+  .project-tags { display: flex; flex-wrap: wrap; gap: 0.4rem; margin-top: 0.5rem; }
+  .tag { font-size: 0.68rem; font-family: 'DM Mono', monospace; letter-spacing: 0.06em; padding: 0.2rem 0.6rem; border: 1px solid var(--beige-mid); color: var(--brown-light); }
+  .project-card.dark .tag { border-color: var(--brown-light); color: var(--beige-mid); }
+  .project-link { font-size: 0.72rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--accent); text-decoration: none; margin-top: auto; padding-top: 0.5rem; display: inline-flex; align-items: center; gap: 0.4rem; transition: color 0.2s; }
+  .project-link::after { content: ' →'; }
+  .project-link:hover { color: var(--brown-dark); }
+
+  #parcours { padding: 6rem 4rem; background: var(--cream); border-top: 1px solid var(--beige-mid); }
+  .parcours-layout { display: grid; grid-template-columns: 1fr 1fr; gap: 5rem; margin-top: 3rem; }
+  .timeline-title-section { font-size: 0.75rem; font-family: 'DM Mono', monospace; letter-spacing: 0.15em; text-transform: uppercase; color: var(--accent); margin-bottom: 1.5rem; }
+  .timeline { border-left: 1px solid var(--beige-mid); padding-left: 1.75rem; }
+  .tl-item { margin-bottom: 2rem; position: relative; }
+  .tl-item::before { content: ''; position: absolute; left: -1.875rem; top: 5px; width: 7px; height: 7px; border-radius: 50%; background: var(--accent); }
+  .tl-date { font-size: 0.68rem; font-family: 'DM Mono', monospace; letter-spacing: 0.12em; text-transform: uppercase; color: var(--tan); margin-bottom: 0.2rem; }
+  .tl-title { font-size: 0.95rem; font-weight: 500; color: var(--brown-dark); }
+  .tl-sub { font-size: 0.8rem; color: var(--accent); margin-bottom: 0.4rem; }
+  .tl-desc { font-size: 0.82rem; color: var(--brown-light); line-height: 1.65; }
+
+  #contact { display: grid; grid-template-columns: 1fr 1fr; border-top: 1px solid var(--beige-mid); }
+  .contact-left { padding: 6rem 4rem; background: var(--brown-dark); border-right: 1px solid var(--brown-light); }
+  .contact-left .section-label { color: var(--tan); }
+  .contact-left .section-label::after { background: var(--brown-light); }
+  .contact-left h2 { color: var(--cream); margin-bottom: 1.25rem; }
+  .contact-desc { font-size: 0.88rem; color: var(--beige-mid); line-height: 1.8; max-width: 36ch; }
+  .contact-right { padding: 6rem 4rem; background: var(--brown-dark); display: flex; flex-direction: column; justify-content: center; gap: 2rem; }
+  .contact-item { display: flex; flex-direction: column; gap: 0.2rem; }
+  .contact-item-label { font-size: 0.65rem; font-family: 'DM Mono', monospace; letter-spacing: 0.15em; text-transform: uppercase; color: var(--tan); }
+  .contact-item-value { font-size: 0.95rem; color: var(--cream); text-decoration: none; border-bottom: 1px solid var(--brown-light); padding-bottom: 0.4rem; transition: border-color 0.2s; }
+  .contact-item-value:hover { border-color: var(--accent-light); }
+
+  footer { background: var(--ink); padding: 1.25rem 4rem; display: flex; justify-content: space-between; align-items: center; }
+  .footer-copy { font-size: 0.7rem; font-family: 'DM Mono', monospace; color: var(--brown-light); }
+  .footer-links { display: flex; gap: 1.5rem; }
+  .footer-links a { font-size: 0.7rem; font-family: 'DM Mono', monospace; color: var(--brown-light); text-decoration: none; transition: color 0.2s; }
+  .footer-links a:hover { color: var(--cream); }
+
+  @media (max-width: 768px) {
+    nav { padding: 1rem 1.5rem; }
+    .nav-links { display: none; }
+    #hero, #about, #contact { grid-template-columns: 1fr; }
+    .hero-left, .about-left, .contact-left, .contact-right { padding: 4rem 1.5rem; }
+    .hero-right, .about-right { padding: 3rem 1.5rem; }
+    #skills, #projects, #parcours, #transversal, #valeurs, #projection, #engagements { padding: 4rem 1.5rem; }
+    .skills-layout { grid-template-columns: 1fr; gap: 2rem; }
+    .skills-grid, .transversal-grid { grid-template-columns: 1fr 1fr; }
+    .projects-grid, .valeurs-layout, .engagements-layout, .parcours-layout, .projection-layout { grid-template-columns: 1fr; }
+    .project-card.dark { grid-column: span 1; }
+    footer { padding: 1rem 1.5rem; flex-direction: column; gap: 0.75rem; }
+    .hero-circle, .hero-circle2 { display: none; }
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="#" class="nav-logo">qr@cyber:~$</a>
+  <ul class="nav-links">
+    <li><a href="#skills">Compétences</a></li>
+    <li><a href="#engagements">Engagements</a></li>
+    <li><a href="#projects">Projets</a></li>
+    <li><a href="#parcours">Parcours</a></li>
+    <li><a href="#contact">Contact</a></li>
+  </ul>
+</nav>
+
+<section id="hero">
+  <div class="hero-left">
+    <div class="hero-photo-wrap">
+      <img src="iV6bm5hC (1).jpg" alt="Quentin Richard">
+    </div>
+    <p class="hero-tag">Étudiant ingénieur · ESAIP · 4ème année</p>
+    <h1>Quentin<br>Richard</h1>
+    <h1 style="margin-top: 0.2rem;"><em>Cybersécurité</em></h1>
+    <p class="hero-desc">Étudiant ingénieur en informatique à l'ESAIP, avec un intérêt marqué pour la sécurité offensive et défensive. Pratique régulière de CTF et de web app pentest en autodidacte.</p>
+    <div class="hero-cta">
+      <a href="#contact" class="btn-primary">Me contacter</a>
+      <a href="https://tryhackme.com/p/Quentinrichard" target="_blank" class="btn-link">TryHackMe</a>
+    </div>
+  </div>
+  <div class="hero-right">
+    <div class="hero-circle"></div>
+    <div class="hero-circle2"></div>
+    <div class="status-badge">
+      <span class="status-dot"></span>
+      Disponible — Juin 2026
+    </div>
+    <div class="info-grid">
+      <div class="info-cell"><p class="info-label">Durée</p><p class="info-value">Min. 8 semaines</p></div>
+      <div class="info-cell"><p class="info-label">Localisation</p><p class="info-value">Mobilité totale</p></div>
+      <div class="info-cell"><p class="info-label">TryHackMe</p><p class="info-value">Top 5 %</p></div>
+      <div class="info-cell"><p class="info-label">Langue</p><p class="info-value">FR natif · EN B2+</p></div>
+    </div>
+  </div>
+</section>
+
+<section id="about">
+  <div class="about-left">
+    <p class="section-label">Profil</p>
+    <h2>Un parcours<br>varié</h2>
+    <p class="about-text">Après une licence de physique, une CPGE TSI et une année en Australie, j'ai rejoint l'ESAIP en informatique avec l'objectif de me spécialiser en cybersécurité. Ce chemin indirect m'a appris à m'adapter et à apprendre par moi-même.</p>
+    <p class="about-text">Je pratique régulièrement TryHackMe, Root-Me et HackTheBox pour progresser en dehors des cours. C'est encore un niveau junior, mais c'est une progression constante.</p>
+  </div>
+  <div class="about-right">
+    <div class="stat-row"><span class="stat-number">Top 5%</span><span class="stat-label">TryHackMe, classement global<br>web app pentest</span></div>
+    <div class="stat-row"><span class="stat-number">12 mois</span><span class="stat-label">Australie, immersion anglophone<br>niveau B2+</span></div>
+    <div class="stat-row"><span class="stat-number">4A</span><span class="stat-label">Cycle ingénieur ESAIP<br>informatique et cybersécurité</span></div>
+    <div class="stat-row"><span class="stat-number">+5 ans</span><span class="stat-label">Expériences professionnelles variées<br>industrie, logistique, terrain</span></div>
+  </div>
+</section>
+
+<section id="skills">
+  <p class="section-label">Compétences techniques</p>
+  <div class="skills-layout">
+    <p class="skills-intro">Compétences acquises en formation et en pratique personnelle. La partie développement me permet de mieux comprendre les applications que j'analyse côté sécurité.</p>
+    <div class="skills-grid">
+      <div class="skill-group">
+        <p class="skill-group-title">Sécurité offensive</p>
+        <div class="skill-list">
+          <span class="skill-item">Burp Suite</span><span class="skill-item">Metasploit</span><span class="skill-item">Nmap</span>
+          <span class="skill-item">Gobuster</span><span class="skill-item">Hydra</span><span class="skill-item">John the Ripper</span><span class="skill-item">Web App Pentest</span>
+        </div>
+      </div>
+      <div class="skill-group">
+        <p class="skill-group-title">Réseaux et systèmes</p>
+        <div class="skill-list">
+          <span class="skill-item">Linux Debian</span><span class="skill-item">Windows Server</span><span class="skill-item">Active Directory</span>
+          <span class="skill-item">TCP/IP · DNS · DHCP</span><span class="skill-item">Wireshark</span><span class="skill-item">Cisco (notions)</span><span class="skill-item">Firewall</span>
+        </div>
+      </div>
+      <div class="skill-group">
+        <p class="skill-group-title">Dev et DevOps</p>
+        <div class="skill-list">
+          <span class="skill-item">Python</span><span class="skill-item">Bash</span><span class="skill-item">Docker</span>
+          <span class="skill-item">Git</span><span class="skill-item">VMware · AWS</span><span class="skill-item">React · TypeScript</span><span class="skill-item">SQL</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="transversal">
+  <p class="section-label">Compétences transversales</p>
+  <div class="transversal-grid">
+    <div class="transversal-card">
+      <p class="transversal-card-title">Autonomie et apprentissage</p>
+      <p>Habitude d'apprendre seul, que ce soit en cybersécurité via les plateformes CTF ou lors de mon année en Australie. Capacité à trouver les ressources nécessaires et à avancer sans encadrement constant.</p>
+    </div>
+    <div class="transversal-card">
+      <p class="transversal-card-title">Adaptation</p>
+      <p>Passé par des environnements très différents : université scientifique, travail manuel, vie à l'étranger, école d'ingénieurs. Facilité à changer de contexte et à trouver mes marques rapidement.</p>
+    </div>
+    <div class="transversal-card">
+      <p class="transversal-card-title">Communication et travail en équipe</p>
+      <p>Expériences de travail collectif en contexte scolaire (projet client, vie associative) et professionnel. Pratique de l'anglais à l'oral au quotidien pendant un an en milieu anglophone.</p>
+    </div>
+    <div class="transversal-card">
+      <p class="transversal-card-title">Organisation</p>
+      <p>Gestion d'un projet client livré dans les délais, planification d'entraînements et d'événements associatifs. Capacité à jongler entre plusieurs priorités tout en maintenant une progression personnelle régulière.</p>
+    </div>
+    <div class="transversal-card">
+      <p class="transversal-card-title">Curiosité technique</p>
+      <p>Intérêt pour comprendre le fonctionnement des systèmes en profondeur. Cette curiosité guide ma pratique autodidacte et me pousse à explorer au-delà du programme de formation.</p>
+    </div>
+    <div class="transversal-card">
+      <p class="transversal-card-title">Résilience</p>
+      <p>Un parcours avec des changements de direction importants : physique, césure, réorientation complète. Capacité à rebondir et à transformer les impasses en nouvelles directions.</p>
+    </div>
+  </div>
+</section>
+
+<section id="valeurs">
+  <p class="section-label">Valeurs et anti-valeurs</p>
+  <div class="valeurs-layout">
+    <div class="valeur-col">
+      <p class="valeur-col-title">Ce qui compte pour moi</p>
+      <div class="valeur-item">
+        <p class="valeur-name">L'honnêteté technique</p>
+        <p class="valeur-desc">Reconnaître ce qu'on ne sait pas plutôt que faire semblant. En sécurité comme ailleurs, surestimer ses compétences peut avoir des conséquences concrètes.</p>
+      </div>
+      <div class="valeur-item">
+        <p class="valeur-name">L'engagement</p>
+        <p class="valeur-desc">Quand je m'implique dans quelque chose, je vais jusqu'au bout. Que ce soit un projet d'école, une mission bénévole ou un challenge CTF commencé tard le soir.</p>
+      </div>
+      <div class="valeur-item">
+        <p class="valeur-name">L'esprit d'équipe</p>
+        <p class="valeur-desc">Travailler avec les autres, partager ce qu'on sait, avancer ensemble. Quelque chose que j'ai appris autant sur un terrain de futsal que dans les projets de groupe.</p>
+      </div>
+      <div class="valeur-item">
+        <p class="valeur-name">L'utilité concrète</p>
+        <p class="valeur-desc">Préférer faire des choses qui servent vraiment, même modestement, plutôt que des projets brillants sur le papier mais creux dans les faits.</p>
+      </div>
+    </div>
+    <div class="valeur-col alt">
+      <p class="valeur-col-title">Ce qui me pose problème</p>
+      <div class="valeur-item">
+        <p class="valeur-name">Le manque de rigueur</p>
+        <p class="valeur-desc">En cybersécurité particulièrement, la négligence a des conséquences réelles. Une documentation bâclée, un test manqué, une hypothèse non vérifiée.</p>
+      </div>
+      <div class="valeur-item">
+        <p class="valeur-name">L'opacité</p>
+        <p class="valeur-desc">Travailler dans des environnements où l'information ne circule pas, où les décisions ne sont pas expliquées. J'ai besoin de comprendre le contexte dans lequel j'évolue.</p>
+      </div>
+      <div class="valeur-item">
+        <p class="valeur-name">L'immobilisme</p>
+        <p class="valeur-desc">Les pratiques figées qui ne s'interrogent plus sur leur pertinence. En sécurité, le paysage évolue vite et les méthodes doivent suivre.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="projection">
+  <p class="section-label">Projection à 3-5 ans</p>
+  <div class="projection-layout">
+    <div>
+      <h2 style="color: var(--cream); margin-bottom: 1.5rem;">Vers le<br>pentesting freelance</h2>
+      <p class="projection-text">L'objectif à moyen terme est de travailler en tant que pentester indépendant, en réalisant des missions d'audit et de test d'intrusion pour des entreprises. C'est une voie qui demande un niveau technique solide, une bonne maîtrise des outils offensifs et la capacité à produire des rapports clairs et exploitables.</p>
+      <p class="projection-text">Je suis encore loin d'être prêt : il y a beaucoup à apprendre, notamment sur les certifications reconnues (OSCP, CEH), la méthodologie d'audit formelle et l'expérience terrain. Ce stage est une première étape dans cette direction.</p>
+    </div>
+    <div class="projection-steps">
+      <div class="projection-step">
+        <span class="step-year">2026</span>
+        <span class="step-text">Stage en cybersécurité pour acquérir une première expérience professionnelle réelle dans le domaine</span>
+      </div>
+      <div class="projection-step">
+        <span class="step-year">2027</span>
+        <span class="step-text">Obtention du diplôme ingénieur ESAIP. Premier poste en entreprise (pentest, SOC ou sécurité applicative) pour monter en compétence</span>
+      </div>
+      <div class="projection-step">
+        <span class="step-year">2028</span>
+        <span class="step-text">Préparation et passage de certifications reconnues (OSCP ou équivalent). Spécialisation progressive sur le test d'intrusion</span>
+      </div>
+      <div class="projection-step">
+        <span class="step-year">2029-30</span>
+        <span class="step-text">Premières missions freelance en parallèle ou en transition, selon l'expérience accumulée et les opportunités</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="engagements">
+  <p class="section-label">Engagements associatifs</p>
+  <div class="engagements-layout">
+    <div class="engagement-card">
+      <p class="engagement-year">1ère année ESAIP · 2023-2024</p>
+      <p class="engagement-title">Coach bénévole de l'équipe de futsal</p>
+      <p class="engagement-sub">Bureau des Sports · ESAIP</p>
+      <p class="engagement-text">Dans le cadre de mon engagement personnel de première année, j'ai pris en charge le coaching bénévole de l'équipe de futsal du bureau des sports. Cela impliquait de planifier et animer les entraînements hebdomadaires, préparer les stratégies de jeu, inscrire l'équipe aux compétitions locales et suivre la progression individuelle des joueurs. Une quarantaine d'heures investies sur la saison, avec une amélioration visible du niveau collectif et une meilleure régularité de participation aux entraînements.</p>
+    </div>
+    <div class="engagement-card">
+      <p class="engagement-year">2ème année ESAIP · 2024-2025</p>
+      <p class="engagement-title">Organisation d'événements étudiants</p>
+      <p class="engagement-sub">Bureau des Études et Bureau des Sports · ESAIP</p>
+      <p class="engagement-text">Participation à la mise en place d'événements pour la vie associative de l'école, en collaboration avec le bureau des études et le bureau des sports. Parmi les événements organisés : une soirée beer-pong au VNB d'Angers, qui a réuni une bonne partie de la promotion. Ces expériences m'ont appris la logistique événementielle, la coordination entre plusieurs parties prenantes et la gestion des imprévus le jour J.</p>
+    </div>
+  </div>
+</section>
+
+<section id="projects">
+  <p class="section-label">Projets</p>
+  <div class="projects-grid">
+    <div class="project-card dark">
+      <p class="project-num">01</p>
+      <p class="project-title">DevSecOps Blue Team</p>
+      <p class="project-desc">Projet personnel autour de la sécurité défensive : scripts de détection, outils de monitoring et documentation sur les pratiques blue team. Infrastructure Docker, automatisation Bash et Python.</p>
+      <div class="project-tags">
+        <span class="tag">Python</span><span class="tag">Bash</span><span class="tag">Docker</span><span class="tag">Blue Team</span><span class="tag">DevSecOps</span>
+      </div>
+      <a href="https://github.com/richardquentin98/devsecopsblueteam" class="project-link" target="_blank">Voir sur GitHub</a>
+    </div>
+    <div class="project-card">
+      <p class="project-num">02</p>
+      <p class="project-title">CTF et pentest (TryHackMe / HTB)</p>
+      <p class="project-desc">Pratique régulière de challenges offensifs : exploitation web, escalade de privilèges, OWASP Top 10. Classement top 5 % sur TryHackMe, principalement sur les parcours web app pentest.</p>
+      <div class="project-tags">
+        <span class="tag">Web Pentest</span><span class="tag">OWASP</span><span class="tag">Burp Suite</span><span class="tag">CTF</span>
+      </div>
+      <a href="https://tryhackme.com/p/Quentinrichard" class="project-link" target="_blank">Profil TryHackMe</a>
+    </div>
+    <div class="project-card">
+      <p class="project-num">03</p>
+      <p class="project-title">Activ'ESAIP, application de réservation</p>
+      <p class="project-desc">Projet encadré avec contrat signé, développé en équipe pour un partenaire de l'école. Application de booking livrée en 6 semaines avec React, Next.js et PostgreSQL.</p>
+      <div class="project-tags">
+        <span class="tag">React</span><span class="tag">Next.js</span><span class="tag">TypeScript</span><span class="tag">PostgreSQL</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="parcours">
+  <p class="section-label">Parcours</p>
+  <div class="parcours-layout">
+    <div>
+      <p class="timeline-title-section">Formation</p>
+      <div class="timeline">
+        <div class="tl-item">
+          <p class="tl-date">2023 – 2026</p>
+          <p class="tl-title">ESAIP</p>
+          <p class="tl-sub">Cycle Ingénieur Informatique · 4ème année</p>
+          <p class="tl-desc">Spécialisation cybersécurité. Réseaux, systèmes, cryptographie, développement sécurisé, projet client livré en conditions réelles.</p>
+        </div>
+        <div class="tl-item">
+          <p class="tl-date">2018 – 2020</p>
+          <p class="tl-title">Université de Nantes</p>
+          <p class="tl-sub">Licence Physique · 5 semestres</p>
+          <p class="tl-desc">Bases solides en logique, mathématiques et raisonnement scientifique.</p>
+        </div>
+        <div class="tl-item">
+          <p class="tl-date">2017 – 2018</p>
+          <p class="tl-title">Lycée Léonce Vieljeux</p>
+          <p class="tl-sub">CPGE TSI</p>
+        </div>
+        <div class="tl-item">
+          <p class="tl-date">2017</p>
+          <p class="tl-title">Baccalauréat STI2D</p>
+          <p class="tl-sub">Lycée Saint-François d'Assise, mention Bien</p>
+        </div>
+      </div>
+    </div>
+    <div>
+      <p class="timeline-title-section">Expériences professionnelles</p>
+      <div class="timeline">
+        <div class="tl-item">
+          <p class="tl-date">Sept 2022 – Sept 2023</p>
+          <p class="tl-title">Année de césure en Australie</p>
+          <p class="tl-sub">Sydney · Adélaïde</p>
+          <p class="tl-desc">12 mois à travailler et vivre en anglais. Livreur Uber Eats à vélo (6 mois), bar-back, échafaudeur. Expérience qui m'a appris à m'adapter et à me débrouiller dans des contextes imprévus.</p>
+        </div>
+        <div class="tl-item">
+          <p class="tl-date">Sept 2023 – Août 2025</p>
+          <p class="tl-title">Intérim et CDD variés</p>
+          <p class="tl-sub">Voltech · La Poste · Les Sables d'Olonne</p>
+          <p class="tl-desc">Agent de production, facteur, livreur. Respect des délais, gestion d'imprévus, travail en équipe dans des environnements variés.</p>
+        </div>
+        <div class="tl-item">
+          <p class="tl-date">2020 – 2022</p>
+          <p class="tl-title">Jobs d'été</p>
+          <p class="tl-sub">La Poste · PASO · Mairie La Roche-sur-Yon</p>
+          <p class="tl-desc">Agent technique municipal, facteur, agent de production, ouvrier du bâtiment.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="contact">
+  <div class="contact-left">
+    <p class="section-label">Contact</p>
+    <h2>Recherche<br>de stage</h2>
+    <p class="contact-desc">Stage en cybersécurité à partir de juin 2026, pour une durée minimum de 8 semaines. Sécurité offensive, défensive ou infrastructure. Mobilité totale.</p>
+  </div>
+  <div class="contact-right">
+    <div class="contact-item">
+      <span class="contact-item-label">Email</span>
+      <a href="mailto:richardquentin98@gmail.com" class="contact-item-value">richardquentin98@gmail.com</a>
+    </div>
+    <div class="contact-item">
+      <span class="contact-item-label">Téléphone</span>
+      <a href="tel:0635168010" class="contact-item-value">06 35 16 80 10</a>
+    </div>
+    <div class="contact-item">
+      <span class="contact-item-label">LinkedIn</span>
+      <a href="https://www.linkedin.com/in/quentin-richard-5b5269202/" target="_blank" class="contact-item-value">quentin-richard-5b5269202</a>
+    </div>
+    <div class="contact-item">
+      <span class="contact-item-label">GitHub</span>
+      <a href="https://github.com/richardquentin98" target="_blank" class="contact-item-value">richardquentin98</a>
+    </div>
+    <div class="contact-item">
+      <span class="contact-item-label">TryHackMe</span>
+      <a href="https://tryhackme.com/p/Quentinrichard" target="_blank" class="contact-item-value">Quentinrichard (top 5 %)</a>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <span class="footer-copy">© 2026 Quentin Richard</span>
+  <div class="footer-links">
+    <a href="https://github.com/richardquentin98" target="_blank">GitHub</a>
+    <a href="https://www.linkedin.com/in/quentin-richard-5b5269202/" target="_blank">LinkedIn</a>
+    <a href="https://tryhackme.com/p/Quentinrichard" target="_blank">TryHackMe</a>
+  </div>
+</footer>
+
+</body>
+</html>
